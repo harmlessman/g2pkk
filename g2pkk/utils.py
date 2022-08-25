@@ -171,12 +171,12 @@ def annotate(string, komoran):
     for char, tag in tokens:
         if tag[0] == 'E' and re.compile('[ㄱ-ㅎ]+').findall(char[0]):
             pr = temp.pop()
-            p1 = j2hcj(h2j(pr[0][-1])) # 'ᄋ ᅵ'
-            p2 = j2hcj(h2j(char[0])) # 'ᆸ'
-            p3 = p1+p2 # '입'
-            char = pr[0][:-1] + j2h(p3[0],p3[1],p3[2]) + char[1:] # 입니다
-            tag = pr[1]+'+'+tag
-            temp.append((char, tag))
+            p1 = j2hcj(h2j(pr[0][-1]))  # 'ᄋ ᅵ'
+            p2 = j2hcj(h2j(char[0]))  # 'ᆸ'
+            p3 = p1+p2  # '입'
+            char = pr[0][:-1] + j2h(p3[0],p3[1],p3[2]) + char[1:]  # '입니다'
+            tag = pr[1]+'+'+tag  # 'VCP+EF'
+            temp.append((char, tag))  # ('입니다', 'VCP+EF')
         else:
             temp.append((char, tag))
     tokens = temp

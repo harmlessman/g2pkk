@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
-'''
-https://github.com/kyubyong/g2pK
-'''
+
 
 import os, re
 
