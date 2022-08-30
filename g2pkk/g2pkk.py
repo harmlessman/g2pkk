@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-import os, re
+import os, re, platform
 
 import nltk
 from konlpy.tag import Komoran
 from jamo import h2j
 from nltk.corpus import cmudict
-
+from eunjeon import Mecab
 # For further info. about cmu dict, consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
 try:
     nltk.data.find('corpora/cmudict.zip')
@@ -23,7 +23,7 @@ from g2pkk.numerals import convert_num
 
 class G2p(object):
     def __init__(self):
-        self.komoran = self.get_komoran()
+        self.mecab = self.get_mecab()
         self.table = parse_table()
 
         self.cmu = cmudict.dict() # for English
@@ -31,13 +31,27 @@ class G2p(object):
         self.rule2text = get_rule_id2text() # for comments of main rules
         self.idioms_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "idioms.txt")
 
-    def get_komoran(self):
-        try:
-            return Komoran()
-        except Exception as e:
-            raise Exception(
-                'If you want to install komoran, The command is... pip install konlpy'
-            )
+    def load_module_func(self, module_name):
+        tmp = __import__(module_name, fromlist=[module_name])
+        return tmp
+
+    def get_mecab(self):
+        if platform.system()=='Windows':
+            try:
+                m = self.load_module_func('eunjeon')
+                return m.Mecab()
+            except Exception as e:
+                raise Exception(
+                    'If you want to install mecab, The command is... pip install eunjeon'
+                )
+        else:
+            try:
+                m = self.load_module_func('mecab')
+                return m.MeCab()
+            except Exception as e:
+                raise Exception(
+                    'If you want to install mecab, The command is... pip install python-mecab-ko'
+                )
 
     def idioms(self, string, descriptive=False, verbose=False):
         '''Process each line in `idioms.txt`
@@ -96,7 +110,8 @@ class G2p(object):
         string = convert_eng(string, self.cmu)
 
         # 3. annotate
-        string = annotate(string, self.komoran)
+        string = annotate(string, self.mecab)
+
 
         # 4. Spell out arabic numbers
         string = convert_num(string)
