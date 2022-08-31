@@ -1,31 +1,21 @@
-import setuptools, platform
+import setuptools
 
 with open("README.md", mode="r", encoding="utf-8") as fh:
     long_description = fh.read()
 
-if platform.system()=='Windows':
-    REQUIRED_PACKAGES = [
-        'jamo',
-        'nltk',
-        'konlpy',
-        'eunjeon'
-    ]
-else:
-    REQUIRED_PACKAGES = [
-        'jamo',
-        'nltk',
-        'konlpy',
-        'python-mecab-ko'
-    ]
+required_packages = [
+            'jamo',
+            'nltk',
+        ]
 
 
 setuptools.setup(
     name="g2pkk",
-    version="0.0.7",
+    version="0.1.0",
     author="harmlessman",
     author_email="harmlessman17@gmail.com",
     description="g2pkk: g2p module for Korean(cross platform)",
-    install_requires=REQUIRED_PACKAGES,
+    install_requires=required_packages,
     license='Apache License 2.0',
     long_description=long_description,
     long_description_content_type="text/markdown",

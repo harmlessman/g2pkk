@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 
-import os, re, platform
+import os, re, platform, sys, importlib
+import subprocess
 
 import nltk
-from konlpy.tag import Komoran
 from jamo import h2j
 from nltk.corpus import cmudict
-from eunjeon import Mecab
+
 # For further info. about cmu dict, consult http://www.speech.cs.cmu.edu/cgi-bin/cmudict.
 try:
     nltk.data.find('corpora/cmudict.zip')
@@ -23,6 +23,7 @@ from g2pkk.numerals import convert_num
 
 class G2p(object):
     def __init__(self):
+        self.check_mecab()
         self.mecab = self.get_mecab()
         self.table = parse_table()
 
@@ -35,23 +36,37 @@ class G2p(object):
         tmp = __import__(module_name, fromlist=[module_name])
         return tmp
 
-    def get_mecab(self):
+    def check_mecab(self):
         if platform.system()=='Windows':
+            spam_spec = importlib.util.find_spec("eunjeon")
+            non_found = spam_spec is None
+            if non_found:
+                print(f'you have to install eunjeon. install it...')
+                p = subprocess.Popen('pip install eunjeon')
+                p.wait()
+        else:
+            spam_spec = importlib.util.find_spec("mecab")
+            non_found = spam_spec is None
+            if non_found:
+                print(f'you have to install python-mecab-ko. install it...')
+                p = subprocess.Popen([sys.executable, "-m", "pip", "install", 'python-mecab-ko'])
+                p.wait()
+
+
+    def get_mecab(self):
+        if platform.system() == 'Windows':
             try:
                 m = self.load_module_func('eunjeon')
                 return m.Mecab()
             except Exception as e:
-                raise Exception(
-                    'If you want to install mecab, The command is... pip install eunjeon'
-                )
+                raise print(f'you have to install eunjeon. "pip install eunjeon"')
         else:
             try:
                 m = self.load_module_func('mecab')
                 return m.MeCab()
             except Exception as e:
-                raise Exception(
-                    'If you want to install mecab, The command is... pip install python-mecab-ko'
-                )
+                print(f'you have to install python-mecab-ko. "pip install python-mecab-ko"')
+
 
     def idioms(self, string, descriptive=False, verbose=False):
         '''Process each line in `idioms.txt`

@@ -1,5 +1,5 @@
 import re
-from jamo import h2j, j2h, j2hcj
+from jamo import h2j, j2h
 import os
 
 ############## English ##############
@@ -161,82 +161,6 @@ def parse_table():
 
 ############## Preprocessing ##############
 def annotate(string, mecab):
-    '''attach pos tags to the given string using Komoran
-    komoran: komoran object
-    '''
-    '''tokens = mecab.pos(string)
-    print(tokens)
-    temp = []
-    # ('3', 'SN'), ('개', 'NNB') -> ('3', 'SN'), ('개', 'NNBC')
-    for char, tag in tokens:
-        if tag == 'NNB':
-            if temp != [] and temp[-1][1] == 'SN':
-                tag = 'NNBC'
-                temp.append((char, tag))
-        else:
-            temp.append((char, tag))
-    tokens = temp
-    print(temp)
-    texts = ''
-    for char, tag in (tokens):
-        texts += char
-        if tag == "NNBC": # bound noun
-            tag = "B"
-        else:
-            tag = tag[0]
-
-
-        if char == "의" and tag == "J":
-            texts += "/J"
-        elif tag=="E":
-            if h2j(char)[-1] in "ᆯ":
-                texts += "/E"
-        elif tag == "V":
-            if h2j(char)[-1] in "ᆫᆬᆷᆱᆰᆲᆴ":
-                texts += "/P"
-        elif tag == "B": # bound noun
-            texts += "/B"
-    print(texts)
-
-
-    for i in tokens:
-        texts+=f'{i[0]}/{i[1]}/*+'
-    texts = texts[:-1]'''
-    '''import csv
-
-    with open('inflect.csv', 'r', encoding='utf8') as f:
-        c = csv.reader(f)
-        for i in c:
-            if i[-1] in texts:
-                print(i[-1])
-    print(texts)
-    temp = []'''
-    '''# ('이', 'VCP'), ('ㅂ니다', 'EF') -> ('입니다', 'VCP+EF')
-    for char, tag in tokens:
-        if tag[0] == 'E' and re.compile('[ㄱ-ㅎ]+').findall(char[0]):
-            pr = temp.pop()
-            p1 = j2hcj(h2j(pr[0][-1]))  # 'ᄋ ᅵ'
-            p2 = j2hcj(h2j(char[0]))  # 'ᆸ'
-            p3 = p1+p2  # '입'
-            char = pr[0][:-1] + j2h(p3[0],p3[1],p3[2]) + char[1:]  # '입니다'
-            tag = pr[1]+'+'+tag  # 'VCP+EF'
-            temp.append((char, tag))  # ('입니다', 'VCP+EF')
-        else:
-            temp.append((char, tag))
-    tokens = temp
-
-
-    temp = []
-    # ('3', 'SN'), ('개', 'NNB') -> ('3', 'SN'), ('개', 'NNBC')
-    for char, tag in tokens:
-        if tag == 'NNB':
-            if temp != [] and temp[-1][1] == 'SN':
-                tag = 'NNBC'
-                temp.append((char, tag))
-        else:
-            temp.append((char, tag))
-    tokens = temp
-    print(temp)'''
     tokens = mecab.pos(string)
     if string.replace(" ", "") != "".join(token for token, _ in tokens):
         return string
