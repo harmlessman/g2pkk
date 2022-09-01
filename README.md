@@ -16,10 +16,10 @@ Install g2pkk and make sure that a morpheme analyzer exists for the operating sy
 
 ## Installation
 ```
-pip install g2pkk==0.1.0
+pip install g2pkk==0.1.1
 ```
 
-Do not download the version below 0.1.0.
+Do not download the version below 0.1.1
 
 It's a test version, so it doesn't work smoothly.
 
