@@ -135,27 +135,29 @@ def reconstruct(string):
 ############## Hangul ##############
 def parse_table():
     '''Parse the main rule table'''
-    lines = open(os.path.dirname(os.path.abspath(__file__)) + '/table.csv', 'r', encoding='utf8').read().splitlines()
-    onsets = lines[0].split(",")
-    table = []
-    for line in lines[1:]:
-        cols = line.split(",")
-        coda = cols[0]
-        for i, onset in enumerate(onsets):
-            cell = cols[i]
-            if len(cell)==0: continue
-            if i==0:
-                continue
-            else:
-                str1 = f"{coda}{onset}"
-                if "(" in cell:
-                    str2 = cell.split("(")[0]
-                    rule_ids = cell.split("(")[1][:-1].split("/")
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/table.csv', 'r', encoding='utf8') as f:
+        lines = f.read().splitlines()
+        onsets = lines[0].split(",")
+        table = []
+        for line in lines[1:]:
+            cols = line.split(",")
+            coda = cols[0]
+            for i, onset in enumerate(onsets):
+                cell = cols[i]
+                if len(cell) == 0: continue
+                if i == 0:
+                    continue
                 else:
-                    str2 = cell
-                    rule_ids = []
+                    str1 = f"{coda}{onset}"
+                    if "(" in cell:
+                        str2 = cell.split("(")[0]
+                        rule_ids = cell.split("(")[1][:-1].split("/")
+                    else:
+                        str2 = cell
+                        rule_ids = []
 
-                table.append((str1, str2, rule_ids))
+                    table.append((str1, str2, rule_ids))
+
     return table
 
 
@@ -245,11 +247,12 @@ def _get_examples():
 ############## Utilities ##############
 def get_rule_id2text():
     '''for verbose=True'''
-    rules = open(os.path.dirname(os.path.abspath(__file__)) + '/rules.txt', 'r', encoding='utf8').read().strip().split("\n\n")
-    rule_id2text = dict()
-    for rule in rules:
-        rule_id, texts = rule.splitlines()[0], rule.splitlines()[1:]
-        rule_id2text[rule_id.strip()] = "\n".join(texts)
+    with open(os.path.dirname(os.path.abspath(__file__)) + '/rules.txt', 'r', encoding='utf8') as f:
+        rules = f.read().strip().split("\n\n")
+        rule_id2text = dict()
+        for rule in rules:
+            rule_id, texts = rule.splitlines()[0], rule.splitlines()[1:]
+            rule_id2text[rule_id.strip()] = "\n".join(texts)
     return rule_id2text
 
 
