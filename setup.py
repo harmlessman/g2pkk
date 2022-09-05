@@ -11,7 +11,7 @@ required_packages = [
 
 setuptools.setup(
     name="g2pkk",
-    version="0.1.1",
+    version="0.1.2",
     author="harmlessman",
     author_email="harmlessman17@gmail.com",
     description="g2pkk: g2p module for Korean(cross platform)",
